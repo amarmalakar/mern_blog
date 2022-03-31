@@ -34,6 +34,27 @@ postRouter.post('/write', Authenticate, async (req, res) => {
     }
 })
 
+postRouter.delete('/delete/:postId', Authenticate, async (req, res) => {
+    try {
+        const isPost = await postModel.findById(req.params.postId);
+
+        if (!isPost) {
+            return res.status(401).json({ success: false, message: 'post is not availabel ! :(' })
+        }
+
+        if (req.isUser._id.toString() !== isPost.userId.toString()) {
+            return res.status(401).json({ success: false, message: "Authorize Error! You've not access to update this post :(" })
+        }
+
+        const deletePost = await postModel.findByIdAndDelete(req.params.postId)
+
+        return res.status(200).json({ success: true, message: 'post is deleted', data: deletePost })
+
+    } catch (error) {
+        res.status(501).json({ success: false, message: error.message })
+    }
+})
+
 postRouter.patch('/update/:postId', Authenticate, async (req, res) => {
     try {
         const isPost = await postModel.findById(req.params.postId)
@@ -59,8 +80,6 @@ postRouter.patch('/update/:postId', Authenticate, async (req, res) => {
     }
 })
 
-// Get Blogs By UserId
-// 622ca5239154dd6728651a07
 postRouter.get('/user/:userId', async (req, res) => {
     try {
         // res.json(req.params.userId)
@@ -89,7 +108,7 @@ postRouter.get('/blogs', async (req, res) => {
     }
 })
 
-// 622f0d6de35a25dca915cbd2
+
 postRouter.get('/blog/:postId', async (req, res) => {
     try {
         // res.json(req.params.postId)

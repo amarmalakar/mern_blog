@@ -17,7 +17,7 @@ const BlogList = ({ blogs }) => {
     if (currentPosts.length === 0) {
         return <h1 className="text-2xl md:text-3xl font-semibold">No Blog Post Is Avliable ! :(</h1>
     }
-
+    
     return (
         <Fragment>
             {currentPosts?.reverse()?.map((blog) => (
